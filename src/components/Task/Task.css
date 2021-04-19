@@ -1,0 +1,23 @@
+.task-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.card-task {
+  width: 85%;
+  height: 38px;
+  padding: 16px;
+  text-align: center;
+}
+
+.text-task-title {
+  font-size: 14px;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-transform: none;
+  text-align: left;
+}

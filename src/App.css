@@ -1,0 +1,16 @@
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  overflow-y: auto;
+}
+
+.list-tasks {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 0px 6px;
+}

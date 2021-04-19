@@ -1,0 +1,23 @@
+.new-task-container {
+  max-width: 400px;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+}
+
+.input-task-title {
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.input-task-title > div {
+  width: 100%;
+}
+
+.btn-add-task {
+  margin-left: 10px;
+}
