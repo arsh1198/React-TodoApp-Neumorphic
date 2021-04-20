@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { Button, Card, IconButton } from "ui-neumorphism";
 import "ui-neumorphism/dist/index.css";
 import "./Task.css";
 import { AiFillDelete } from "react-icons/ai";
+import { TaskContext } from "../../context/TaskContext";
+import { FaCheck } from "react-icons/fa";
 
 const Task = ({ task }) => {
-  const [checked, setChecked] = useState(false);
+  const { toggleComplete, deleteTask } = useContext(TaskContext);
 
   return (
     <Card bordered className="task-content">
       <Button
-        active={checked}
+        active={task.completed}
         className="card-task"
-        onClick={() => setChecked((prev) => !prev)}
+        onClick={() => {
+          toggleComplete(task.id);
+        }}
       >
         <p
-          style={checked ? { textDecoration: "line-through" } : null}
+          style={task.completed ? { textDecoration: "line-through" } : null}
           className="text-task-title"
         >
           {task.title}
         </p>
       </Button>
 
-      <IconButton text={false} className="btn-delete">
-        <AiFillDelete color="crimson" />
+      <IconButton
+        className="btn-delete"
+        onClick={() => deleteTask(task.id)}
+        text={false}
+      >
+        {task.completed ? (
+          <FaCheck color="green" />
+        ) : (
+          <AiFillDelete color="crimson" />
+        )}
       </IconButton>
     </Card>
   );

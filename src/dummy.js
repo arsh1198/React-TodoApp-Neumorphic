@@ -1,61 +1,18 @@
+import id from "uuid/v4";
+
 const dummy = [
   {
+    id: id(),
     title: "Clean the Fish tank!",
     completed: false,
   },
   {
+    id: id(),
     title: "Water the Plants!",
     completed: true,
   },
   {
-    title: "Read a book!",
-    completed: false,
-  },
-  {
-    title: "Clean the Fish tank!",
-    completed: false,
-  },
-  {
-    title: "Water the Plants!",
-    completed: true,
-  },
-  {
-    title: "Read a book!",
-    completed: false,
-  },
-  {
-    title: "Clean the Fish tank!",
-    completed: false,
-  },
-  {
-    title: "Water the Plants!",
-    completed: true,
-  },
-  {
-    title: "Read a book!",
-    completed: false,
-  },
-  {
-    title: "Clean the Fish tank!",
-    completed: false,
-  },
-  {
-    title: "Water the Plants!",
-    completed: true,
-  },
-  {
-    title: "Read a book!",
-    completed: false,
-  },
-  {
-    title: "Clean the Fish tank!",
-    completed: false,
-  },
-  {
-    title: "Water the Plants!",
-    completed: true,
-  },
-  {
+    id: id(),
     title: "Read a book!",
     completed: false,
   },

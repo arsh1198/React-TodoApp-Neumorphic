@@ -11,7 +11,7 @@
   width: 85%;
   height: 38px;
   padding: 16px;
-  text-align: center;
+  overflow: hidden;
 }
 
 .text-task-title {
