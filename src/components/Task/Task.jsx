@@ -5,6 +5,7 @@ import "./Task.css";
 import { AiFillDelete } from "react-icons/ai";
 import { TaskContext } from "../../context/TaskContext";
 import { FaCheck } from "react-icons/fa";
+import { firestore } from "../../firebase";
 
 const Task = ({ task }) => {
   const { toggleComplete, deleteTask } = useContext(TaskContext);
@@ -15,7 +16,7 @@ const Task = ({ task }) => {
         active={task.completed}
         className="card-task"
         onClick={() => {
-          toggleComplete(task.id);
+          toggleComplete(task);
         }}
       >
         <p
@@ -28,7 +29,7 @@ const Task = ({ task }) => {
 
       <IconButton
         className="btn-delete"
-        onClick={() => deleteTask(task.id)}
+        onClick={() => deleteTask(task)}
         text={false}
       >
         {task.completed ? (

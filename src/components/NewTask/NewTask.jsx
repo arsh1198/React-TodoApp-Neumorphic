@@ -3,11 +3,13 @@ import { Button, Card, TextField } from "ui-neumorphism";
 import "ui-neumorphism/dist/index.css";
 import "./NewTask.css";
 import { TaskContext } from "../../context/TaskContext";
+import firebase, { firestore } from "../../firebase";
 
 const NewTask = () => {
   const [title, setTitle] = useState("");
-  const { addTask } = useContext(TaskContext);
   const formRef = useRef();
+
+  const { addTask } = useContext(TaskContext);
 
   const resetInput = () => {
     setTitle("");
@@ -16,7 +18,6 @@ const NewTask = () => {
 
   return (
     <form
-      style={{ width: "500px" }}
       onSubmit={(e) => {
         e.preventDefault();
         addTask(title);

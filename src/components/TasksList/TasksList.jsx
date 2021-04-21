@@ -5,6 +5,8 @@ import Task from "../Task/Task";
 import { TaskContext } from "../../context/TaskContext";
 import NoTask from "../NoTask/NoTask";
 import { AnimatePresence, motion } from "framer-motion";
+import { ProgressCircular } from "ui-neumorphism";
+import "ui-neumorphism/dist/index.css";
 
 const transition = {
   type: "spring",
@@ -32,7 +34,7 @@ const variants = {
 };
 
 const TasksList = ({ style }) => {
-  const { tasks } = useContext(TaskContext);
+  const { tasks, loading } = useContext(TaskContext);
   return (
     <motion.div
       className="list-tasks"
@@ -44,34 +46,40 @@ const TasksList = ({ style }) => {
       }}
     >
       <AnimatePresence>
-        {tasks.length < 1 ? (
-          <motion.div
-            transition={transition}
-            variants={variants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <NoTask />
-          </motion.div>
-        ) : (
-          tasks.map((task, index) => {
-            return (
+        {loading && (
+          <center>
+            <ProgressCircular style={{ marginTop: "18px" }} indeterminate />
+          </center>
+        )}
+        {tasks.length > 0
+          ? tasks.map((task, index) => {
+              return (
+                <motion.div
+                  transition={transition}
+                  variants={variants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  layout
+                  key={task.id}
+                  custom={index}
+                >
+                  <Task key={task.id} task={task} />
+                </motion.div>
+              );
+            })
+          : !loading && (
               <motion.div
                 transition={transition}
                 variants={variants}
                 initial="initial"
                 animate="animate"
-                exit="exit"
                 layout
-                key={task.id}
-                custom={index}
+                exit="exit"
               >
-                <Task task={task} />
+                <NoTask />
               </motion.div>
-            );
-          })
-        )}
+            )}
       </AnimatePresence>
     </motion.div>
   );

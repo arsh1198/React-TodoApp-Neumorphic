@@ -1,52 +1,98 @@
-import React, { createContext, useReducer } from "react";
-import dummy from "../dummy";
-import id from "uuid/v4";
+import React, { createContext, useEffect, useReducer } from "react";
 
-const ADD_TASK = "ADD_TASK";
-const TOGGLE_COMPLETE = "TOGGLE_COMPLETE";
-const DELETE_TASK = "DELETE_TASK";
+import firebase, { firestore } from "../firebase";
+
+const SET_TASKS = "SET_TASKS";
+const ERROR = "ERROR";
 
 export const TaskContext = createContext();
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case ADD_TASK:
-      if (action.payload.title !== "") return [action.payload, ...state];
-    case TOGGLE_COMPLETE:
-      return state.map((task) => {
-        if (task.id !== action.payload.id) return task;
-        return { ...task, completed: !task.completed };
-      });
-    case DELETE_TASK:
-      return state.filter((task) => task.id !== action.payload.id);
+    case SET_TASKS:
+      return {
+        ...state,
+        tasks: action.payload,
+        loading: false,
+      };
+    case ERROR:
+      return {
+        ...state,
+        tasks: [],
+        loading: false,
+        error: action.payload,
+      };
     default:
       return state;
   }
 };
 
-export const TaskProvider = ({ children }) => {
-  const [tasks, dispatch] = useReducer(reducer, dummy);
+const initialState = {
+  tasks: [],
+  loading: true,
+  error: null,
+};
 
-  const addTask = (title) => {
-    dispatch({
-      type: ADD_TASK,
-      payload: {
-        id: id(),
+export const TaskProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    const tasksSnapshot = firestore.collection("tasks");
+    const unsubscribe = tasksSnapshot
+      .orderBy("created", "desc")
+      .onSnapshot((snapshot) => {
+        const tasks = snapshot.docs.map(
+          (doc) => {
+            return { id: doc.id, ...doc.data() };
+          },
+          (error) => {
+            dispatch({ type: ERROR, payload: error.message });
+          }
+        );
+        dispatch({ type: SET_TASKS, payload: tasks });
+      });
+    return () => unsubscribe();
+  }, [dispatch]);
+
+  const addTask = async (title) => {
+    try {
+      const tasksRef = firestore.collection("tasks");
+      await tasksRef.add({
+        created: firebase.firestore.Timestamp.now(),
         title,
         completed: false,
-      },
-    });
+      });
+    } catch (error) {
+      dispatch({ type: ERROR, payload: error.message });
+    }
   };
 
-  const toggleComplete = (id) => {
-    dispatch({ type: TOGGLE_COMPLETE, payload: { id } });
+  const toggleComplete = async ({ id, completed }) => {
+    try {
+      await firestore.collection("tasks").doc(id).update({
+        completed: !completed,
+      });
+    } catch (error) {
+      dispatch({ type: ERROR, payload: error.message });
+    }
   };
 
-  const deleteTask = (id) => {
-    dispatch({ type: DELETE_TASK, payload: { id } });
+  const deleteTask = async ({ id }) => {
+    try {
+      await firestore.collection("tasks").doc(id).delete();
+    } catch (error) {
+      dispatch({ type: ERROR, payload: error.message });
+    }
   };
 
-  const value = { tasks, addTask, toggleComplete, deleteTask };
+  const value = {
+    tasks: state.tasks,
+    loading: state.loading,
+    error: state.error,
+    addTask,
+    toggleComplete,
+    deleteTask,
+  };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
