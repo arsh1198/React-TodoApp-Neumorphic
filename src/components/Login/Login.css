@@ -1,0 +1,29 @@
+.card-login {
+  display: flex;
+  width: 300px;
+  padding: 25px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.btn-login {
+  width: 200px;
+}
+
+.txt-todo {
+  font-weight: bold;
+  color: rgb(63, 74, 85);
+  margin-bottom: 25px;
+  font-size: 40px;
+}
+
+.txt-btn {
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.txt-creds {
+  margin-top: 20px;
+  font-size: 14px;
+}

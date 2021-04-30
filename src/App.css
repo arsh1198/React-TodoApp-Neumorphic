@@ -3,13 +3,23 @@
   width: 100vw;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-  padding-top: 25px;
+  padding-top: 21px;
   overflow-y: auto;
 }
 
-.list-tasks {
-  overflow-y: auto;
-  flex-grow: 1;
-  padding: 0px 6px;
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bfc9e4;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: #e4ebf5;
+  box-shadow: inset 1px 1px 2px #bebebe, inset -1px -1px 2px #ffffff;
 }

@@ -1,18 +1,18 @@
 import React, { useContext } from "react";
-import { Button, Card, IconButton } from "ui-neumorphism";
-import "ui-neumorphism/dist/index.css";
+import { Button, IconButton } from "ui-neumorphism";
+
 import "./Task.css";
-import { AiFillDelete } from "react-icons/ai";
+import { IoCloseSharp } from "react-icons/io5";
 import { TaskContext } from "../../context/TaskContext";
 import { FaCheck } from "react-icons/fa";
-import { firestore } from "../../firebase";
 
 const Task = ({ task }) => {
   const { toggleComplete, deleteTask } = useContext(TaskContext);
 
   return (
-    <Card bordered className="task-content">
+    <div className="task-content">
       <Button
+        bordered
         active={task.completed}
         className="card-task"
         onClick={() => {
@@ -28,17 +28,18 @@ const Task = ({ task }) => {
       </Button>
 
       <IconButton
+        bordered
         className="btn-delete"
         onClick={() => deleteTask(task)}
         text={false}
       >
         {task.completed ? (
-          <FaCheck color="green" />
+          <FaCheck color="#4CAF50" />
         ) : (
-          <AiFillDelete color="crimson" />
+          <IoCloseSharp size={24} color="#FF5252" />
         )}
       </IconButton>
-    </Card>
+    </div>
   );
 };
 

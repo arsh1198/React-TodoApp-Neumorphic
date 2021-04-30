@@ -1,9 +1,11 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 
 import firebase, { firestore } from "../firebase";
+import { AuthContext } from "./AuthContext";
 
 const SET_TASKS = "SET_TASKS";
 const ERROR = "ERROR";
+const CLEAR_TASKS = "CLEAR_TASKS";
 
 export const TaskContext = createContext();
 
@@ -15,10 +17,15 @@ const reducer = (state, action) => {
         tasks: action.payload,
         loading: false,
       };
-    case ERROR:
+    case CLEAR_TASKS:
       return {
         ...state,
         tasks: [],
+        loading: true,
+      };
+    case ERROR:
+      return {
+        ...state,
         loading: false,
         error: action.payload,
       };
@@ -35,9 +42,14 @@ const initialState = {
 
 export const TaskProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const { user } = useContext(AuthContext);
   useEffect(() => {
-    const tasksSnapshot = firestore.collection("tasks");
+    if (!user) return;
+
+    const tasksSnapshot = firestore
+      .collection("users")
+      .doc(user.uid)
+      .collection("tasks");
     const unsubscribe = tasksSnapshot
       .orderBy("created", "desc")
       .onSnapshot((snapshot) => {
@@ -52,11 +64,14 @@ export const TaskProvider = ({ children }) => {
         dispatch({ type: SET_TASKS, payload: tasks });
       });
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   const addTask = async (title) => {
     try {
-      const tasksRef = firestore.collection("tasks");
+      const tasksRef = firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("tasks");
       await tasksRef.add({
         created: firebase.firestore.Timestamp.now(),
         title,
@@ -69,9 +84,14 @@ export const TaskProvider = ({ children }) => {
 
   const toggleComplete = async ({ id, completed }) => {
     try {
-      await firestore.collection("tasks").doc(id).update({
-        completed: !completed,
-      });
+      await firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("tasks")
+        .doc(id)
+        .update({
+          completed: !completed,
+        });
     } catch (error) {
       dispatch({ type: ERROR, payload: error.message });
     }
@@ -79,10 +99,19 @@ export const TaskProvider = ({ children }) => {
 
   const deleteTask = async ({ id }) => {
     try {
-      await firestore.collection("tasks").doc(id).delete();
+      await firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("tasks")
+        .doc(id)
+        .delete();
     } catch (error) {
       dispatch({ type: ERROR, payload: error.message });
     }
+  };
+
+  const clearTasks = () => {
+    dispatch({ type: CLEAR_TASKS });
   };
 
   const value = {
@@ -92,6 +121,7 @@ export const TaskProvider = ({ children }) => {
     addTask,
     toggleComplete,
     deleteTask,
+    clearTasks,
   };
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

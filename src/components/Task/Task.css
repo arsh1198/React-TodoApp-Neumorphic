@@ -3,21 +3,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
   margin-bottom: 10px;
 }
 
 .card-task {
-  width: 85%;
+  width: 90%;
   height: 38px;
   padding: 16px;
-  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .text-task-title {
   font-size: 14px;
-  margin-left: 10px;
-  margin-right: 10px;
   text-transform: none;
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

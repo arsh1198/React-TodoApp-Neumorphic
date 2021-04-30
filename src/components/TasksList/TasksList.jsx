@@ -51,6 +51,7 @@ const TasksList = ({ style }) => {
             <ProgressCircular style={{ marginTop: "18px" }} indeterminate />
           </center>
         )}
+
         {tasks.length > 0
           ? tasks.map((task, index) => {
               return (
